@@ -1,3 +1,4 @@
+import { UserCircleIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -6,21 +7,22 @@ export default function Root() {
 
   return (
     <nav
-      className={`fixed bg-orange-100 transition-all duration-600 ${
-        isExpanded ? "w-64" : "w-20"
+      className={`fixed bg-orange-900 transition-all duration-600 ${
+        isExpanded ? "w-56" : "w-20"
       } h-screen overflow-y-auto`}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
     >
       <ul className="flex flex-col items-center h-full space-y-2">
-        <li className="w-full text-center bg-orange-100 text-white uppercase font-bold py-4 text-xl tracking-wider">
+        <li className="w-full text-center bg-orange-900 text-white uppercase font-bold py-4 text-xl tracking-wider">
           <NavLink to="/" className="flex items-center justify-center">
+            <UserCircleIcon className="w-8 h-8" />
             <span
               className={`${
                 isExpanded ? "inline" : "hidden"
               } transition-all duration-600`}
             >
-              SICESA
+              Perfil
             </span>
           </NavLink>
         </li>
@@ -44,6 +46,36 @@ export default function Root() {
           label="Postres"
           isExpanded={isExpanded}
         />
+        <NavItem
+          to="/gerente"
+          icon={<>👩🏽‍💼</>}
+          label="Gerente"
+          isExpanded={isExpanded}
+        />
+        <NavItem
+          to="/gerente/ventas"
+          icon={<>💰</>}
+          label="Ventas"
+          isExpanded={isExpanded}
+        />
+        <NavItem
+          to="/gerente/productos/crear"
+          icon={<>📦</>}
+          label="Productos"
+          isExpanded={isExpanded}
+        />
+        <NavItem
+          to="/empleado/cobro"
+          icon={<>💳</>}
+          label="Cobro"
+          isExpanded={isExpanded}
+        />
+        <NavItem
+          to="/login"
+          icon={<>🔐</>}
+          label="Login"
+          isExpanded={isExpanded}
+        />
       </ul>
     </nav>
   );
@@ -57,7 +89,7 @@ function NavItem({ to, icon, label, isExpanded }) {
         to={to}
         className={({ isActive }) =>
           `flex items-center h-20 font-semibold hover:text-white hover:bg-amber-700 transition-all duration-600 ${
-            isActive ? "bg-amber-700 text-white" : " text-amber-700"
+            isActive ? "bg-amber-700 text-white" : " text-amber-300"
           }`
         }
       >
