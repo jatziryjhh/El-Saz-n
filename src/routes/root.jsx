@@ -76,6 +76,13 @@ export default function Root() {
           label="Login"
           isExpanded={isExpanded}
         />
+
+        <NavItem
+          to="/register"
+          icon={<>📝</>}
+          label="Registro"
+          isExpanded={isExpanded}
+        />
       </ul>
     </nav>
   );

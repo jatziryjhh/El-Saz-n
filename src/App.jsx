@@ -9,6 +9,9 @@ import GerenteHome from "./app/gerente/gerenteHome";
 import Ventas from "./app/gerente/ventas/ventas";
 import CrearProductos from "./app/gerente/gestion/productos";
 import Cobro from "./app/empleado/cobro/cobro";
+import { ContextProvider } from "./context/context";
+import ShoppingCart from "./components/shopping car/shopping";
+import Registro from "./app/register/registro";
 
 const AppRoutes = () => {
   let routes = useRoutes([
@@ -19,18 +22,22 @@ const AppRoutes = () => {
     { path: "/gerente/ventas", element: <Ventas /> },
     { path: "/gerente/productos/crear", element: <CrearProductos /> },
     { path: "/empleado/cobro", element: <Cobro /> },
+    { path: "/register", element: <Registro /> },
   ]);
   return routes;
 };
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Root />
-      <Header titulo="El Sazon" />
-      <Layout>
-        <AppRoutes />
-      </Layout>
-    </BrowserRouter>
+    <ContextProvider>
+      <BrowserRouter>
+        <Root />
+        <Header titulo="El Sazon" />
+        <Layout>
+          <AppRoutes />
+        </Layout>
+        <ShoppingCart />
+      </BrowserRouter>
+    </ContextProvider>
   );
 }

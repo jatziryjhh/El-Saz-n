@@ -1,23 +1,41 @@
-export default function ItemCard() {
+/* eslint-disable react/prop-types */
+import { PlusIcon } from "@heroicons/react/16/solid";
+import { useContext } from "react";
+import { Context } from "../../context/context";
+
+export default function ItemCard(props) {
+  const context = useContext(Context);
+  const { nombre_producto, precio, categoria, imagen } = props.props;
+  const addProductsToCart = (productData) => {
+    context.setCartProducts([...context.cartProducts, productData]);
+    context.openProductCart();
+  };
+
   return (
-    <div className="bg-white cursor-pointer w-56 h-60 rounded-lg">
+    <div className="bg-white w-56 h-60 rounded-lg mb-5">
       <figure className="relative mb-2 w-full h-4/5">
         <span
-          className="absolute bottom-0 left-0 bg-white/60 rounded-lg 
+          className="absolute bottom-0 left-0 bg-white/60 rounded-lg
                 text-black text-xs
                 m-2 px-3 py-0.5"
         >
-          Categoria
+          {categoria.nombrecategoria}
         </span>
         <img
-          className="w-full h-full object-cover rounded-lg "
-          src="https://editorialtelevisa.brightspotcdn.com/dims4/default/10ea439/2147483647/strip/true/crop/706x706+177+0/resize/1000x1000!/quality/90/?url=https%3A%2F%2Fk2-prod-editorial-televisa.s3.us-east-1.amazonaws.com%2Fbrightspot%2F6b%2F66%2Fbadcc27245e59fc1c0fd1ca34ae3%2Fcafe.jpg"
-          alt="nombre"
+          className="w-full h-full object-cover rounded-lg"
+          src={imagen}
+          alt={nombre_producto}
         />
+        <div className="absolute top-0 right-0 flex justify-center items-center bg-white w-8 h-8 rounded-full m-2 p-1">
+          <PlusIcon
+            className="w-8 h-8 text-black "
+            onClick={() => addProductsToCart(props.props)}
+          />
+        </div>
       </figure>
       <p className="flex justify-between">
-        <span className="text-sm font-light">Nombre</span>
-        <span className=" text-lg font-medium">$150</span>
+        <span className="text-sm font-light">{nombre_producto}</span>
+        <span className="text-lg font-medium">${precio}</span>
       </p>
     </div>
   );

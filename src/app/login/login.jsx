@@ -1,4 +1,29 @@
+import React, { useState } from "react";
+import axios from "axios";
+
 export default function Login() {
+  const [correo, setCorreo] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      const response = await axios.post("http://localhost:8080/api/auth/signin", {
+        correo,
+        contrasena,
+      });
+
+      localStorage.setItem("token", response.data.data.token);
+      console.log("Inicio de sesión exitoso"+ response.data.data.token);
+      window.location.href = "/dashboard"; 
+    } catch (err) {
+      setError("Credenciales incorrectas o problema en el servidor");
+    }
+  };
+
   return (
     <div
       className="h-screen w-3/4 bg-cover bg-center flex items-center justify-center rounded-lg"
@@ -16,11 +41,14 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-brown-700 mb-4 text-amber-800">
             Inicia sesión
           </h1>
-          <form className="w-full">
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <form className="w-full" onSubmit={handleSubmit}>
             <div className="mb-4">
               <input
                 type="text"
                 placeholder="Correo"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
                 className="w-full px-4 py-2 border border-brown-500 rounded-md focus:outline-none focus:ring focus:ring-orange-300"
               />
             </div>
@@ -28,6 +56,8 @@ export default function Login() {
               <input
                 type="password"
                 placeholder="Contraseña"
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
                 className="w-full px-4 py-2 border border-brown-500 rounded-md focus:outline-none focus:ring focus:ring-orange-300"
               />
             </div>

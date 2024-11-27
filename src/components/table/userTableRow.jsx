@@ -1,9 +1,8 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 
-export default function UserTableRow(props) {
-  // eslint-disable-next-line react/prop-types
-  const { nombre, rol, status } = props.props;
+export default function UserTableRow({ props, onEdit, onDelete }) {
+  const { id_usuario, nombre, apellidom, apellidop, rol, status } = props;
   const [userStatus, setUserStatus] = useState(status);
 
   return (
@@ -23,7 +22,7 @@ export default function UserTableRow(props) {
             ></div>
           </div>
           <div>
-            <p className="font-semibold text-black">{nombre || "Cliente"}</p>
+            <p className="font-semibold text-black">{nombre + " "+  apellidop + " "+ apellidom || "Cliente"}</p>
           </div>
         </div>
       </td>
@@ -36,15 +35,20 @@ export default function UserTableRow(props) {
               : "text-red-700 bg-red-100"
           } rounded-lg`}
         >
-          {" "}
-          {userStatus ? "Activo" : "Inactivo"}{" "}
+          {userStatus ? "Activo" : "Inactivo"}
         </span>
       </td>
-      <td className="px-4 py-3 text-sm border ">
-        <button className="bg-yellow-500 rounded-lg mr-2 h-8">
+      <td className="px-4 py-3 text-sm border">
+        <button
+          className="bg-yellow-500 rounded-lg mr-2 h-8"
+          onClick={() => onEdit(id_usuario)}
+        >
           <PencilSquareIcon className="h-6 w-12 text-white cursor-pointer" />
         </button>
-        <button className="bg-red-500 rounded-lg h-8">
+        <button
+          className="bg-red-500 rounded-lg h-8"
+          onClick={() => onDelete(id_usuario)}
+        >
           <TrashIcon className="h-6 w-12 text-white cursor-pointer" />
         </button>
       </td>
