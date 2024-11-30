@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import UserTableRow from "./UserTableRow";
 import EditUserModal from "../modal/UsuariosModal";
+import CreateUserModal from "../modal/UsuarioRegistroModal";  
 
 export default function UserTable() {
   const [datosUsuarios, setDatosUsuarios] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);  
 
-  useEffect(() => {
+  useEffect(() => { 
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -41,7 +43,7 @@ export default function UserTable() {
   const handleEdit = (id) => {
     const userToEdit = datosUsuarios.find((usuario) => usuario.id_usuario === id);
     setEditingUser(userToEdit);
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
   const handleSaveChanges = (updatedUser) => {
@@ -57,6 +59,7 @@ export default function UserTable() {
             user.id_usuario === updatedUser.id_usuario ? { ...user, ...updatedUser } : user
           )
         );
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error al guardar cambios:", error);
@@ -81,17 +84,33 @@ export default function UserTable() {
       });
   };
 
+  const handleSaveNewUser = (newUser) => {
+    axios
+      .post("http://localhost:8080/api/usuario/registro", newUser, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((response) => {
+        setDatosUsuarios((prev) => [...prev, response.data]);
+        setIsCreateModalOpen(false); 
+        window.location.reload();
+
+      })
+      .catch((error) => {
+        console.error("Error al agregar el nuevo usuario:", error);
+      });
+  };
+
   return (
     <>
       <div className="mb-4 flex justify-end">
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsCreateModalOpen(true)} // Open the CreateUserModal
           className="bg-amber-500 text-white px-4 py-2 rounded"
         >
           Añadir Usuario
         </button>
       </div>
-      <div className="mb-6"></div> {/* Esto añade un espacio de margen de 1.5rem */}
+      <div className="mb-6"></div>
       <table className="min-w-full">
         <thead>
           <tr>
@@ -113,11 +132,19 @@ export default function UserTable() {
         </tbody>
       </table>
 
+      {/* Edit Modal */}
       <EditUserModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
         user={editingUser}
         onSave={handleSaveChanges}
+      />
+
+      {/* Create User Modal */}
+      <CreateUserModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSave={handleSaveNewUser}
       />
     </>
   );

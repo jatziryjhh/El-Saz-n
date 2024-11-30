@@ -1,4 +1,16 @@
-import { UserCircleIcon } from "@heroicons/react/16/solid";
+import {
+  UserCircleIcon,
+  HomeIcon,
+  CakeIcon,
+  ShoppingBagIcon,
+  UserGroupIcon,
+  CreditCardIcon,
+  LockClosedIcon,
+  PencilSquareIcon,
+  ChartBarIcon,
+  Squares2X2Icon,
+  ArrowLeftEndOnRectangleIcon,
+} from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -27,60 +39,70 @@ export default function Root() {
           </NavLink>
         </li>
 
-        <NavItem to="/" icon={<>🏠</>} label="Inicio" isExpanded={isExpanded} />
         <NavItem
-          to="/comida"
-          icon={<>🍔</>}
+          to="/"
+          icon={<HomeIcon className="w-6 h-6" />}
+          label="Inicio"
+          isExpanded={isExpanded}
+        />
+        <NavItem
+          to="/productos/alimentos"
+          icon={<Squares2X2Icon className="w-6 h-6" />}
           label="Comida"
           isExpanded={isExpanded}
         />
         <NavItem
-          to="/bebidas"
-          icon={<>🥤</>}
+          to="/productos/bebidas"
+          icon={<ShoppingBagIcon className="w-6 h-6" />}
           label="Bebidas"
           isExpanded={isExpanded}
         />
         <NavItem
-          to="/postres"
-          icon={<>🍰</>}
+          to="/productos/postres"
+          icon={<CakeIcon className="w-6 h-6" />}
           label="Postres"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/gerente"
-          icon={<>👩🏽‍💼</>}
+          icon={<UserGroupIcon className="w-6 h-6" />}
           label="Gerente"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/gerente/ventas"
-          icon={<>💰</>}
+          icon={<ChartBarIcon className="w-6 h-6" />}
           label="Ventas"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/gerente/productos/crear"
-          icon={<>📦</>}
+          icon={<Squares2X2Icon className="w-6 h-6" />}
           label="Productos"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/empleado/cobro"
-          icon={<>💳</>}
+          icon={<CreditCardIcon className="w-6 h-6" />}
           label="Cobro"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/login"
-          icon={<>🔐</>}
-          label="Login"
+          icon={<LockClosedIcon className="w-6 h-6" />}
+          label="Inicio de Sesión"
           isExpanded={isExpanded}
         />
-
         <NavItem
           to="/register"
-          icon={<>📝</>}
+          icon={<PencilSquareIcon className="w-6 h-6" />}
           label="Registro"
+          isExpanded={isExpanded}
+        />
+        <NavItem
+          
+          icon={<ArrowLeftEndOnRectangleIcon className="w-6 h-6" />}
+          label="Cerrar Sesion"
           isExpanded={isExpanded}
         />
       </ul>

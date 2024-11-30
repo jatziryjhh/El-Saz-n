@@ -2,38 +2,23 @@
 import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
-export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
+export default function UsuarioRegistroModal({ isOpen, onClose, onSave }) {
   const [formData, setFormData] = useState({
     nombre: "",
     correo: "",
+    contrasena: "",
     apellidop: "",
     apellidom: "",
     rol: "",
-    status: "",
+    status: "true",
   });
 
   const [roles, setRoles] = useState([]);
 
   useEffect(() => {
-    if (user) {
-      setFormData({
-        id_usuario: user.id_usuario,
-        nombre: user.nombre || "",
-        correo: user.correo || "",
-        apellidop: user.apellidop || "",
-        apellidom: user.apellidom || "",
-        rol: user.rol ? user.rol.id_rol : "", 
-        status: user.status ? "true" : "false", 
-      });
-    }
-  }, [user]);
-
-  
-
-  useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/rol/"); 
+        const response = await fetch("http://localhost:8080/api/rol/");
         const data = await response.json();
         if (data && data.data) {
           setRoles(data.data);
@@ -59,12 +44,10 @@ export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
   const handleSubmit = () => {
     console.log("Datos a enviar:", formData);
   
-    const statusValue = formData.status === "true" ? 1 : 0;
+    const statusValue = formData.status === "true" ? true : false;
   
-    // Buscar el objeto del rol correspondiente en la lista de roles
-    const selectedRole = roles.find((role) => role.id_role === parseInt(formData.rol, 10));
+    const selectedRole = roles.find(role => role.id_role === parseInt(formData.rol, 10));
   
-    // Crear un nuevo objeto para enviar con el rol como objeto
     const updatedFormData = {
       ...formData,
       status: statusValue,
@@ -74,12 +57,11 @@ export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
     console.log("Datos actualizados para enviar:", updatedFormData);
   
     try {
-      toast.success("Datos actualizados correctamente!");
       onSave(updatedFormData);
-      toast.success("Usuario actualizado correctamente!");
+      toast.success("Usuario registrado correctamente!");
       onClose();
     } catch (error) {
-       toast.error("Hubo un error al guardar los datos.");
+      toast.error("Hubo un error al guardar los datos.");
     }
   };
 
@@ -87,7 +69,7 @@ export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
     isOpen && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div className="bg-white p-6 rounded-lg w-full max-w-lg">
-          <h2 className="text-2xl font-bold mb-4">Editar Usuario</h2>
+          <h2 className="text-2xl font-bold mb-4">Registrar Usuario</h2>
           <div className="mb-4">
             <label htmlFor="nombre" className="block">
               Nombre
@@ -140,6 +122,19 @@ export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
               className="w-full p-2 border rounded"
             />
           </div>
+          <div className="mb-4">
+            <label htmlFor="contrasena" className="block">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              id="contrasena"
+              name="contrasena"
+              value={formData.contrasena}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
 
           <div className="mb-4">
             <label htmlFor="status" className="block">
@@ -148,7 +143,7 @@ export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
             <select
               id="status"
               name="status"
-              value={formData.status || ""}
+              value={formData.status}
               onChange={handleChange}
               className="w-full p-2 border rounded"
             >
@@ -163,7 +158,7 @@ export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
             <select
               id="rol"
               name="rol"
-              value={formData.rol || ""}
+              value={formData.rol}
               onChange={handleChange}
               className="w-full p-2 border rounded"
             >
@@ -189,11 +184,11 @@ export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
               className="bg-blue-500 text-white px-4 py-2 rounded"
               onClick={handleSubmit}
             >
-              Guardar Cambios
+              Guardar
             </button>
           </div>
         </div>
-        <Toaster /> 
+        <Toaster />
       </div>
     )
   );

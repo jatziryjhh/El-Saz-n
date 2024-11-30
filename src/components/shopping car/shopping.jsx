@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { ShoppingBagIcon } from "@heroicons/react/16/solid";
 import ItemShoppingCar from "./itemShoppingCar";
 import { Context } from "../../context/context";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ShoppingCart() {
   const context = useContext(Context);
@@ -64,8 +65,57 @@ export default function ShoppingCart() {
     );
   };
 
+  const hacerPedido = async () => {
+    const usuarioId = localStorage.getItem("Usuario");
+    const token = localStorage.getItem("token");
+
+    if (!usuarioId || !token) {
+      toast.alert("No se encontró usuario o token en el almacenamiento local.");
+      return;
+    }
+
+    // Crear el array de productosIds basado en las cantidades
+    const productosIds = carrito.flatMap((producto) =>
+      Array(producto.cantidad).fill(producto.id)
+    );
+
+    const pedido = {
+      fecha_pedido: new Date().toISOString(),
+      total_pedido: calcularTotal(),
+      status: "Pendiente",
+      usuarioId: parseInt(usuarioId, 10),
+      productosIds,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/api/pedido/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(pedido),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al realizar el pedido.");
+      }
+
+      toast.success("Pedido realizado con éxito.");
+      setCarrito([]); // Vaciar carrito local
+      context.setCartProducts([]); // Vaciar carrito en el contexto
+    } catch (error) {
+      console.error("Error al hacer el pedido:", error);
+      toast.alert(
+        "Hubo un error al realizar el pedido. Por favor, intenta de nuevo."
+      );
+    }
+  };
+
   return (
     <>
+      <Toaster position="bottom-center" />
+
       <aside
         className={`fixed right-0 top-0 h-full w-80 bg-slate-100 shadow-lg flex-col ${
           context.isProductCartOpen ? `flex` : `hidden`
@@ -113,7 +163,10 @@ export default function ShoppingCart() {
             >
               Vaciar cesta
             </button>
-            <button className="flex-1 bg-orange-500 text-white py-2 rounded hover:bg-orange-600">
+            <button
+              className="flex-1 bg-orange-500 text-white py-2 rounded hover:bg-orange-600"
+              onClick={hacerPedido}
+            >
               Hacer pedido
             </button>
           </div>

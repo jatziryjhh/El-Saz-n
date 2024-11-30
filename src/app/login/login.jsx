@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 export default function Login() {
@@ -11,15 +11,18 @@ export default function Login() {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/signin", {
-        correo,
-        contrasena,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/signin",
+        {
+          correo,
+          contrasena,
+        }
+      );
 
       localStorage.setItem("token", response.data.data.token);
-      console.log("Inicio de sesión exitoso"+ response.data.data.token);
-      window.location.href = "/dashboard"; 
-    } catch (err) {
+      localStorage.setItem("Usuario", response.data.data.usuario.id);
+      window.location.href = "/";
+    } catch (err) { 
       setError("Credenciales incorrectas o problema en el servidor");
     }
   };
