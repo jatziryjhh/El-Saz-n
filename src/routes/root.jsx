@@ -1,3 +1,4 @@
+import { CubeIcon, PlusIcon } from "@heroicons/react/16/solid";
 import {
   UserCircleIcon,
   HomeIcon,
@@ -66,19 +67,25 @@ export default function Root() {
         <NavItem
           to="/gerente"
           icon={<UserGroupIcon className="w-6 h-6" />}
-          label="Gerente"
+          label="Usuarios"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/gerente/ventas"
           icon={<ChartBarIcon className="w-6 h-6" />}
-          label="Ventas"
+          label="Resultados"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/gerente/productos/crear"
-          icon={<Squares2X2Icon className="w-6 h-6" />}
-          label="Productos"
+          icon={<PlusIcon className="w-6 h-6" />}
+          label="Agregar Productos"
+          isExpanded={isExpanded}
+        />
+        <NavItem
+          to="/gerente/inventario"
+          icon={<CubeIcon className="w-6 h-6" />}
+          label="Inventario"
           isExpanded={isExpanded}
         />
         <NavItem
@@ -99,8 +106,8 @@ export default function Root() {
           label="Registro"
           isExpanded={isExpanded}
         />
+
         <NavItem
-          
           icon={<ArrowLeftEndOnRectangleIcon className="w-6 h-6" />}
           label="Cerrar Sesion"
           isExpanded={isExpanded}

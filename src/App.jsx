@@ -13,6 +13,8 @@
   import ShoppingCart from "./components/shopping car/shopping";
   import Registro from "./app/register/registro";
 import ProductosCategoria from "./app/ProductosCategoria/ProductosCategoria";
+import Disponibilidad from "./app/horario/Disponibilidad";
+import Inventario from "./app/gerente/inventario/inventario";
 
   const AppRoutes = () => {
     let routes = useRoutes([
@@ -24,7 +26,9 @@ import ProductosCategoria from "./app/ProductosCategoria/ProductosCategoria";
       { path: "/gerente/productos/crear", element: <CrearProductos /> },
       { path: "/empleado/cobro", element: <Cobro /> },
       { path: "/register", element: <Registro /> },
+      {path: "/horario", element: <Disponibilidad />},
       { path: "/productos/:categoria", element: <ProductosCategoria /> },
+      {path: "/gerente/inventario", element: <Inventario/>}
     ]);
     return routes;
   };

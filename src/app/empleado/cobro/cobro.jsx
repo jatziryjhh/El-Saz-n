@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   CalendarDaysIcon,
   CheckCircleIcon,
@@ -8,9 +8,13 @@ import {
 } from "@heroicons/react/24/solid";
 import TablePayRow from "../../../components/pay/TablePayRow";
 import axios from "axios";
+import PedidoModal from "../../../components/modal/pedidoModal/pedidoModal";
+import { Context } from "../../../context/context";
 
 export default function Cobro() {
   const [pedidos, setPedidos] = useState([]);
+  const [pedidoToShow, setPedidoToShow] = useState({});
+  const { openPedidoModal } = useContext(Context); // Función del contexto para abrir el modal
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -21,9 +25,10 @@ export default function Cobro() {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response);
-
-        setPedidos(response.data.data);
+        const sortedPedidos = response.data.data.sort((a, b) =>
+          a.status === "Pendiente" && b.status !== "Pendiente" ? -1 : 1
+        );
+        setPedidos(sortedPedidos);
       } catch (error) {
         console.error("Error al obtener los pedidos:", error);
       }
@@ -31,6 +36,60 @@ export default function Cobro() {
 
     fetchPedidos();
   }, [token]);
+
+  const handleStatusChange = async (pedido) => {
+    const productosIds = pedido.productos.map((producto) => producto.id);
+
+    const updatedPedido = {
+      id_pedido: pedido.id_pedido,
+      fecha_pedido: pedido.fecha_pedido,
+      total_pedido: pedido.total_pedido,
+      status: "Completado",
+      usuarioId: pedido.usuario.id,
+      productosIds,
+    };
+
+    try {
+      await axios.put(
+        `http://localhost:8080/api/pedido/${pedido.id_pedido}`,
+        updatedPedido,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setPedidos((prevPedidos) =>
+        prevPedidos
+          .map((p) =>
+            p.id_pedido === pedido.id_pedido ? { ...p, status: "Completado" } : p
+          )
+          .sort((a, b) =>
+            a.status === "Pendiente" && b.status !== "Pendiente" ? -1 : 1
+          )
+      );
+    } catch (error) {
+      console.error("Error al actualizar el pedido:", error);
+    }
+  };
+
+  const handleViewPedido = (pedido) => {
+    const pedidoResumen = pedido.productos.reduce((acc, producto) => {
+      const existingProducto = acc.find((item) => item.id === producto.id);
+      if (existingProducto) {
+        existingProducto.cantidad += 1;
+      } else {
+        acc.push({ ...producto, cantidad: 1 });
+      }
+      return acc;
+    }, []);
+
+    setPedidoToShow({ ...pedido, productos: pedidoResumen });
+    openPedidoModal();
+  };
+
 
   return (
     <div className="flex w-3/4 justify-center">
@@ -67,7 +126,7 @@ export default function Cobro() {
                 <span>Fecha de Entrega</span>
               </div>
             </th>
-            <th className="py-3 px-4">Cobrar</th>
+            <th className="py-3 px-4">Funciones</th>
           </tr>
         </thead>
         <tbody className="text-gray-700">
@@ -75,13 +134,9 @@ export default function Cobro() {
             pedidos.map((pedido) => (
               <TablePayRow
                 key={pedido.id_pedido}
-                id={pedido.id_pedido}
-                nombreUsuario={`${pedido.usuario.nombre} ${pedido.usuario.apellidop}`}
-                precio={pedido.total_pedido}
-                estatus={pedido.status}
-                fechaEntrega={new Date(
-                  pedido.fecha_pedido
-                ).toLocaleDateString()}
+                pedido={pedido}
+                onStatusChange={handleStatusChange}
+                onViewPedido={handleViewPedido}
               />
             ))
           ) : (
@@ -93,6 +148,7 @@ export default function Cobro() {
           )}
         </tbody>
       </table>
+      <PedidoModal pedido={pedidoToShow}/>
     </div>
   );
 }

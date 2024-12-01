@@ -21,6 +21,7 @@ export default function Login() {
 
       localStorage.setItem("token", response.data.data.token);
       localStorage.setItem("Usuario", response.data.data.usuario.id);
+      localStorage.setItem("Correo", response.data.data.usuario.correo);
       window.location.href = "/";
     } catch (err) { 
       setError("Credenciales incorrectas o problema en el servidor");

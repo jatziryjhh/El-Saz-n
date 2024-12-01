@@ -9,6 +9,10 @@ export const ContextProvider = ({ children }) => {
   const openProductCart = () => setIsProductCartOpen(true);
   const closeProductCart = () => setIsProductCartOpen(false);
   const [cartProducts, setCartProducts] = useState([]);
+  const [isPedidoModalOpen, setIsPedidoModalOpen] = useState(false);
+  const openPedidoModal = () => setIsPedidoModalOpen(true);
+  const closePedidoModal = () => setIsPedidoModalOpen(false);
+  const [pedidoToShow, setPedidoToShow] = useState({});
 
   return (
     <Context.Provider
@@ -20,6 +24,11 @@ export const ContextProvider = ({ children }) => {
         closeProductCart,
         cartProducts,
         setCartProducts,
+        isPedidoModalOpen,
+        openPedidoModal,
+        closePedidoModal,
+        pedidoToShow,
+        setPedidoToShow,
       }}
     >
       {children}
