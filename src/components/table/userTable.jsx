@@ -104,7 +104,7 @@ export default function UserTable() {
     <>
       <div className="mb-4 flex justify-end">
         <button
-          onClick={() => setIsCreateModalOpen(true)} // Open the CreateUserModal
+          onClick={() => setIsCreateModalOpen(true)} 
           className="bg-amber-500 text-white px-4 py-2 rounded"
         >
           Añadir Usuario
@@ -116,7 +116,7 @@ export default function UserTable() {
           <tr>
             <th>Nombre</th>
             <th>Rol</th>
-            <th>Status</th>
+            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>

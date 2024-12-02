@@ -138,7 +138,7 @@ export default function UsuarioRegistroModal({ isOpen, onClose, onSave }) {
 
           <div className="mb-4">
             <label htmlFor="status" className="block">
-              Status
+              Estado
             </label>
             <select
               id="status"

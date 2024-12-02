@@ -12,11 +12,29 @@ import {
   Squares2X2Icon,
   ArrowLeftEndOnRectangleIcon,
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Root() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [userRole, setUserRole] = useState(null); // Estado para el rol del usuario
+  const navigate = useNavigate();
+
+  // Verifica el rol del usuario desde localStorage
+  useEffect(() => {
+    const role = localStorage.getItem("Rol");
+    setUserRole(role);
+  }, []);
+
+  // Función para cerrar sesión
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("Usuario");
+    localStorage.removeItem("Correo");
+    localStorage.removeItem("Rol");
+    setUserRole(null);
+    navigate("/");
+  };
 
   return (
     <nav
@@ -40,6 +58,7 @@ export default function Root() {
           </NavLink>
         </li>
 
+        {/* Rutas comunes */}
         <NavItem
           to="/"
           icon={<HomeIcon className="w-6 h-6" />}
@@ -64,54 +83,80 @@ export default function Root() {
           label="Postres"
           isExpanded={isExpanded}
         />
-        <NavItem
-          to="/gerente"
-          icon={<UserGroupIcon className="w-6 h-6" />}
-          label="Usuarios"
-          isExpanded={isExpanded}
-        />
-        <NavItem
-          to="/gerente/ventas"
-          icon={<ChartBarIcon className="w-6 h-6" />}
-          label="Resultados"
-          isExpanded={isExpanded}
-        />
-        <NavItem
-          to="/gerente/productos/crear"
-          icon={<PlusIcon className="w-6 h-6" />}
-          label="Agregar Productos"
-          isExpanded={isExpanded}
-        />
-        <NavItem
-          to="/gerente/inventario"
-          icon={<CubeIcon className="w-6 h-6" />}
-          label="Inventario"
-          isExpanded={isExpanded}
-        />
-        <NavItem
-          to="/empleado/cobro"
-          icon={<CreditCardIcon className="w-6 h-6" />}
-          label="Cobro"
-          isExpanded={isExpanded}
-        />
-        <NavItem
-          to="/login"
-          icon={<LockClosedIcon className="w-6 h-6" />}
-          label="Inicio de Sesión"
-          isExpanded={isExpanded}
-        />
-        <NavItem
-          to="/register"
-          icon={<PencilSquareIcon className="w-6 h-6" />}
-          label="Registro"
-          isExpanded={isExpanded}
-        />
 
-        <NavItem
-          icon={<ArrowLeftEndOnRectangleIcon className="w-6 h-6" />}
-          label="Cerrar Sesion"
-          isExpanded={isExpanded}
-        />
+        {/* Rutas para Gerente */}
+        {userRole === "Gerente" && (
+          <>
+            <NavItem
+              to="/gerente"
+              icon={<UserGroupIcon className="w-6 h-6" />}
+              label="Usuarios"
+              isExpanded={isExpanded}
+            />
+            <NavItem
+              to="/gerente/ventas"
+              icon={<ChartBarIcon className="w-6 h-6" />}
+              label="Resultados"
+              isExpanded={isExpanded}
+            />
+            <NavItem
+              to="/gerente/productos/crear"
+              icon={<PlusIcon className="w-6 h-6" />}
+              label="Agregar Productos"
+              isExpanded={isExpanded}
+            />
+            <NavItem
+              to="/gerente/inventario"
+              icon={<CubeIcon className="w-6 h-6" />}
+              label="Inventario"
+              isExpanded={isExpanded}
+            />
+          </>
+        )}
+
+        {/* Rutas para Empleado */}
+        {userRole === "Empleado" && (
+          <NavItem
+            to="/empleado/cobro"
+            icon={<CreditCardIcon className="w-6 h-6" />}
+            label="Cobro"
+            isExpanded={isExpanded}
+          />
+        )}
+
+        {/* Opciones de sesión */}
+        {!userRole ? (
+          <>
+            <NavItem
+              to="/login"
+              icon={<LockClosedIcon className="w-6 h-6" />}
+              label="Inicio de Sesión"
+              isExpanded={isExpanded}
+            />
+            <NavItem
+              to="/register"
+              icon={<PencilSquareIcon className="w-6 h-6" />}
+              label="Registro"
+              isExpanded={isExpanded}
+            />
+          </>
+        ) : (
+          <li className="w-full">
+            <button
+              onClick={handleLogout}
+              className="flex items-center h-20 font-semibold w-full text-amber-300 hover:text-white hover:bg-amber-700 transition-all duration-600"
+            >
+              <div className="w-16 flex justify-center">
+                <ArrowLeftEndOnRectangleIcon className="w-6 h-6" />
+              </div>
+              <span
+                className={`${isExpanded ? "inline-block" : "hidden"} ml-4`}
+              >
+                Cerrar Sesión
+              </span>
+            </button>
+          </li>
+        )}
       </ul>
     </nav>
   );

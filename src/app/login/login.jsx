@@ -18,12 +18,13 @@ export default function Login() {
           contrasena,
         }
       );
-
+      console.log(response.data.data);
       localStorage.setItem("token", response.data.data.token);
       localStorage.setItem("Usuario", response.data.data.usuario.id);
       localStorage.setItem("Correo", response.data.data.usuario.correo);
+      localStorage.setItem("Rol", response.data.data.usuario.rol.nombre);
       window.location.href = "/";
-    } catch (err) { 
+    } catch (err) {
       setError("Credenciales incorrectas o problema en el servidor");
     }
   };

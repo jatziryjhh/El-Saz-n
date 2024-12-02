@@ -1,12 +1,23 @@
 /* eslint-disable react/prop-types */
 import { PlusIcon } from "@heroicons/react/16/solid";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { Context } from "../../context/context";
 
 export default function ItemCard(props) {
   const context = useContext(Context);
+  const navigate = useNavigate();
   const { nombre_producto, precio, categoria, imagen } = props.props;
+
   const addProductsToCart = (productData) => {
+    // Verificar si el usuario está logeado
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // Redirigir al inicio de sesión si no está logeado
+      navigate("/login");
+      return;
+    }
+    // Añadir el producto al carrito
     context.setCartProducts([...context.cartProducts, productData]);
     context.openProductCart();
   };
@@ -28,7 +39,7 @@ export default function ItemCard(props) {
         />
         <div className="absolute top-0 right-0 flex justify-center items-center bg-white w-8 h-8 rounded-full m-2 p-1">
           <PlusIcon
-            className="w-8 h-8 text-black "
+            className="w-8 h-8 text-black cursor-pointer"
             onClick={() => addProductsToCart(props.props)}
           />
         </div>
