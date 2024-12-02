@@ -1,19 +1,23 @@
-import { CubeIcon, PlusIcon } from "@heroicons/react/16/solid";
+import { CubeIcon } from "@heroicons/react/16/solid";
 import {
   UserCircleIcon,
   HomeIcon,
-  CakeIcon,
-  ShoppingBagIcon,
   UserGroupIcon,
-  CreditCardIcon,
-  LockClosedIcon,
   PencilSquareIcon,
   ChartBarIcon,
-  Squares2X2Icon,
   ArrowLeftEndOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { FaHamburger } from "react-icons/fa";
+import { BiSolidDrink } from "react-icons/bi";
+import { GiCupcake } from "react-icons/gi";
+import { BiLogIn } from "react-icons/bi";
+import { FaCashRegister } from "react-icons/fa6";
+import { MdAddToPhotos } from "react-icons/md";
+
+
+
 
 export default function Root() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -67,19 +71,19 @@ export default function Root() {
         />
         <NavItem
           to="/productos/alimentos"
-          icon={<Squares2X2Icon className="w-6 h-6" />}
+          icon={<FaHamburger  className="w-6 h-6" />}
           label="Comida"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/productos/bebidas"
-          icon={<ShoppingBagIcon className="w-6 h-6" />}
+          icon={<BiSolidDrink className="w-6 h-6" />}
           label="Bebidas"
           isExpanded={isExpanded}
         />
         <NavItem
           to="/productos/postres"
-          icon={<CakeIcon className="w-6 h-6" />}
+          icon={<GiCupcake className="w-6 h-6" />}
           label="Postres"
           isExpanded={isExpanded}
         />
@@ -101,7 +105,7 @@ export default function Root() {
             />
             <NavItem
               to="/gerente/productos/crear"
-              icon={<PlusIcon className="w-6 h-6" />}
+              icon={<MdAddToPhotos className="w-6 h-6" />}
               label="Agregar Productos"
               isExpanded={isExpanded}
             />
@@ -118,7 +122,7 @@ export default function Root() {
         {userRole === "Empleado" && (
           <NavItem
             to="/empleado/cobro"
-            icon={<CreditCardIcon className="w-6 h-6" />}
+            icon={<FaCashRegister className="w-6 h-6" />}
             label="Cobro"
             isExpanded={isExpanded}
           />
@@ -129,7 +133,7 @@ export default function Root() {
           <>
             <NavItem
               to="/login"
-              icon={<LockClosedIcon className="w-6 h-6" />}
+              icon={<BiLogIn className="w-6 h-6" />}
               label="Inicio de Sesión"
               isExpanded={isExpanded}
             />
