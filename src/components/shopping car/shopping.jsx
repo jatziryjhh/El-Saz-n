@@ -80,6 +80,7 @@
           throw new Error("Error al enviar el correo.");
         }
 
+
         console.log("Correo enviado con éxito.");
       } catch (error) {
         console.error("Error al enviar el correo:", error);
@@ -107,6 +108,7 @@
         usuarioId: parseInt(usuarioId, 10),
         productosIds,
       };
+    
 
       try {
         const response = await fetch("http://localhost:8080/api/pedido/", {
@@ -121,6 +123,31 @@
         if (!response.ok) {
           throw new Error("Error al realizar el pedido.");
         }
+        for (const producto of carrito) {
+          const nuevaCantidad = producto.cantidad_disponible - producto.cantidad;
+    
+          const productoActualizado = {
+            ...producto,
+            cantidad_disponible: nuevaCantidad,
+          };
+          const putResponse = await fetch(
+            `http://localhost:8080/api/producto/${producto.id}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(productoActualizado),
+            }
+          );
+          if (!putResponse.ok) {
+            throw new Error(
+              `Error al actualizar el producto ${producto.nombre_producto}.`
+            );
+          }
+        }
+    
         const pedidoDetalles = {
           destinatario: localStorage.getItem("Correo"),
           asunto: "Detalles de pedido realizado",
@@ -166,6 +193,7 @@
         toast.success("Pedido realizado con éxito.");
         setCarrito([]);
         context.setCartProducts([]);
+        context.closeProductCart();
       } catch (error) {
         console.error("Error al hacer el pedido:", error);
         toast.alert(

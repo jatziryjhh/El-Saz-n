@@ -12,7 +12,13 @@ export default function Home() {
       );
       const data = await response.json();
       console.log("Productos cargados:", data.data);
-      setProductos(data.data);
+
+      // Filtrar productos con cantidad_disponible > 0
+      const productosDisponibles = data.data.filter(
+        (producto) => producto.cantidad_disponible > 0
+      );
+
+      setProductos(productosDisponibles);
     } catch (error) {
       console.error("Error al cargar los productos:", error);
     }

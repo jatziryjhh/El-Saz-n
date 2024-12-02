@@ -16,18 +16,25 @@ import { BiLogIn } from "react-icons/bi";
 import { FaCashRegister } from "react-icons/fa6";
 import { MdAddToPhotos } from "react-icons/md";
 
-
-
-
 export default function Root() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [userRole, setUserRole] = useState(null); // Estado para el rol del usuario
+  const [userRole, setUserRole] = useState(null);
+  const [userName, setUserName] = useState(""); 
   const navigate = useNavigate();
 
-  // Verifica el rol del usuario desde localStorage
   useEffect(() => {
     const role = localStorage.getItem("Rol");
+    const nombre = localStorage.getItem("Nombre");
+    const apellido = localStorage.getItem("Apellido");
     setUserRole(role);
+
+    if (nombre && apellido) {
+      setUserName(`${nombre.charAt(0).toUpperCase()}${nombre.slice(1)} ${apellido.charAt(0).toUpperCase()}${apellido.slice(1)}`);
+    } else if (nombre) {
+      setUserName(`${nombre.charAt(0).toUpperCase()}${nombre.slice(1)}`);
+    } else {
+      setUserName("Perfil");
+    }
   }, []);
 
   // Función para cerrar sesión
@@ -36,6 +43,8 @@ export default function Root() {
     localStorage.removeItem("Usuario");
     localStorage.removeItem("Correo");
     localStorage.removeItem("Rol");
+    localStorage.removeItem("Nombre");
+    localStorage.removeItem("Apellido");
     setUserRole(null);
     navigate("/");
   };
@@ -57,7 +66,7 @@ export default function Root() {
                 isExpanded ? "inline" : "hidden"
               } transition-all duration-600`}
             >
-              Perfil
+              {userName}
             </span>
           </NavLink>
         </li>
@@ -71,7 +80,7 @@ export default function Root() {
         />
         <NavItem
           to="/productos/alimentos"
-          icon={<FaHamburger  className="w-6 h-6" />}
+          icon={<FaHamburger className="w-6 h-6" />}
           label="Comida"
           isExpanded={isExpanded}
         />

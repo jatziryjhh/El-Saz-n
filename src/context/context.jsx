@@ -13,6 +13,12 @@ export const ContextProvider = ({ children }) => {
   const openPedidoModal = () => setIsPedidoModalOpen(true);
   const closePedidoModal = () => setIsPedidoModalOpen(false);
   const [pedidoToShow, setPedidoToShow] = useState({});
+  //Comprobrar si el horario esta disponible de 6AM a 9PM
+  const hora = new Date().getHours();
+  const min = new Date().getMinutes();
+  const horaActual = hora + min / 60;
+  const horarioDisponible = horaActual >= 6 && horaActual <= 21;
+  console.log(horarioDisponible);
 
   return (
     <Context.Provider
@@ -29,6 +35,7 @@ export const ContextProvider = ({ children }) => {
         closePedidoModal,
         pedidoToShow,
         setPedidoToShow,
+        horarioDisponible,
       }}
     >
       {children}

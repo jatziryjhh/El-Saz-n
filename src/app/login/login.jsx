@@ -23,6 +23,8 @@ export default function Login() {
       localStorage.setItem("Usuario", response.data.data.usuario.id);
       localStorage.setItem("Correo", response.data.data.usuario.correo);
       localStorage.setItem("Rol", response.data.data.usuario.rol.nombre);
+      localStorage.setItem("Nombre", response.data.data.usuario.nombre);
+      localStorage.setItem("Apellido", response.data.data.usuario.apellidop);
       window.location.href = "/";
     } catch (err) {
       setError("Credenciales incorrectas o problema en el servidor");

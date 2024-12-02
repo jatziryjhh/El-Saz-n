@@ -15,13 +15,14 @@ export default function ProductosCategoria() {
       const data = await response.json();
       console.log("Productos cargados:", data.data);
 
-      // Filtrar productos por categoría usando categoria.nombrecategoria
+      // Filtrar productos por categoría y cantidad_disponible > 0
       const productosFiltrados = data.data.filter(
         (producto) =>
           producto.categoria &&
           producto.categoria.nombrecategoria &&
           producto.categoria.nombrecategoria.toLowerCase() ===
-            categoria.toLowerCase()
+            categoria.toLowerCase() &&
+          producto.cantidad_disponible > 0 // Excluir productos sin stock
       );
 
       setProductos(productosFiltrados);

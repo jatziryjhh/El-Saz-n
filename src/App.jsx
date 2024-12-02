@@ -59,7 +59,6 @@ const AppRoutes = () => {
       ),
     },
     { path: "/register", element: <Registro /> },
-    { path: "/horario", element: <Disponibilidad /> },
     {
       path: "/productos/:categoria",
       element: <ProductosCategoria />,
@@ -84,6 +83,7 @@ export default function App() {
           <AppRoutes />
         </Layout>
         <ShoppingCart />
+        <Disponibilidad />
       </BrowserRouter>
     </ContextProvider>
   );
