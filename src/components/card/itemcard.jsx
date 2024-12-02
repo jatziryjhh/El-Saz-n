@@ -3,11 +3,13 @@ import { PlusIcon } from "@heroicons/react/16/solid";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../context/context";
+import toast from "react-hot-toast";
 
 export default function ItemCard(props) {
   const context = useContext(Context);
   const navigate = useNavigate();
-  const { nombre_producto, precio, categoria, imagen } = props.props;
+  const { id, nombre_producto, precio, categoria, imagen, cantidad_disponible } =
+    props.props;
 
   const addProductsToCart = (productData) => {
     // Verificar si el usuario está logeado
@@ -17,6 +19,24 @@ export default function ItemCard(props) {
       navigate("/login");
       return;
     }
+
+    // Comprobar la cantidad actual en el carrito
+    const productoEnCarrito = context.cartProducts.filter(
+      (producto) => producto.id === id
+    );
+    const cantidadEnCarrito = productoEnCarrito.reduce(
+      (acc, producto) => acc + (producto.cantidad || 1),
+      0
+    );
+
+    if (cantidadEnCarrito >= cantidad_disponible) {
+      // Mostrar notificación si se supera la cantidad disponible
+      toast.error(
+        `No puedes agregar más de ${cantidad_disponible} unidades de ${nombre_producto}.`
+      );
+      return;
+    }
+
     // Añadir el producto al carrito
     context.setCartProducts([...context.cartProducts, productData]);
     context.openProductCart();

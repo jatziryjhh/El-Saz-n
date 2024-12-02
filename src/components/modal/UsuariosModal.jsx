@@ -64,7 +64,6 @@ export default function UsuariosModal({ isOpen, onClose, user, onSave }) {
     // Buscar el objeto del rol correspondiente en la lista de roles
     const selectedRole = roles.find((role) => role.id_role === parseInt(formData.rol, 10));
   
-    // Crear un nuevo objeto para enviar con el rol como objeto
     const updatedFormData = {
       ...formData,
       status: statusValue,
